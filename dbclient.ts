@@ -89,7 +89,7 @@ export class DBClient {
    * @returns true if successful
    */
   async createPost(post: Post): Promise<Boolean> {
-    var incrementedPostCount = (await PostModel.count({})) + 1;
+    var incrementedPostCount = (await PostModel.countDocuments()) + 1;
     return new Promise(function (resolve, reject) {
       var postModel = new PostModel({
         title: post.title,
