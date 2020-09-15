@@ -3,6 +3,10 @@ import { Schema } from "mongoose";
 import mongoose from "mongoose";
 import passport from "passport";
 import UserModel from "./models/usermodel";
+var session = require("express-session");
+var flash = require("connect-flash");
+var bodyParser = require("body-parser");
+
 import shajs from "sha.js";
 import SystemlogModel from "./models/systemlogmodel";
 
@@ -31,8 +35,10 @@ export default class FritzCMS {
       message.save(function (err, message) {
         if (err) return console.error(err);
       });
+      this.createUsers();
     } else {
       console.log("System was started already. Welcome back!");
+      this.setupAuthentication();
     }
   }
 
@@ -42,11 +48,46 @@ export default class FritzCMS {
 
     app.set("view engine", "ejs");
 
+    app.use(express.json({ type: "*/*" }));
+    app.use(
+      session({
+        // cookie: { maxAge: 10000 },
+        secret: "ztziwFOAILEUDFGVAIWZ3IGULesdthgse5r",
+        resave: false,
+        saveUninitialized: false,
+      })
+    );
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(flash());
+
     app.get("/", function (req, res) {
       res.render("pages/index", {
         siteTitle: "FritzCMS",
         siteDescription: "A CMS which fits your needs",
       });
+    });
+
+    /**
+     * Authenticate user with post request
+     */
+    app.get("/doLogin", passport.authenticate("local"), function (req, res) {
+      res.redirect("dashboard");
+    });
+
+    /**
+     * Authenticate user with post request
+     */
+    app.get("/dashboard", checkAuthentication, function (req, res) {
+      res.send("Welcome user");
+    });
+
+    /**
+     * Authenticate user with post request
+     */
+    app.get("/login", function (req, res) {
+      res.render("pages/loginPage");
     });
 
     // start the express server
@@ -107,7 +148,6 @@ export default class FritzCMS {
           done(err, null);
         });
     });
-    this.createUsers();
   }
   /**
    * SETUP
@@ -118,13 +158,26 @@ export default class FritzCMS {
     var admin = new UserModel({
       username: "admin",
       userId: 2,
-      password: shajs("sha256").update(userpassword).digest("hex"),
+      password: userpassword,
       isAdmin: true,
     });
     admin.save(function (err, message) {
       console.log("Created admin");
       if (err) return console.error(err);
     });
+  }
+}
+
+/**
+ * Checks authentication state
+ */
+function checkAuthentication(req: any, res: any, next: any) {
+  if (req.isAuthenticated()) {
+    console.log("Authenticated!");
+    next();
+  } else {
+    console.log("Authentication failed.");
+    res.send(401);
   }
 }
 

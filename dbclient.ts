@@ -20,7 +20,7 @@ export class DBClient {
     var newUser = new UserModel({
       username: username,
       userId: toIncrement,
-      password: shajs("sha256").update(password).digest("hex"),
+      password: password,
       isAdmin: false,
     });
     // Create user only if user doesn't exist already
