@@ -40,8 +40,13 @@ export default class FritzCMS {
     const app = express();
     const port = 80; // default port to listen
 
-    app.get("/", (req: any, res: any) => {
-      res.send("<h1>hello</h1>");
+    app.set("view engine", "ejs");
+
+    app.get("/", function (req, res) {
+      res.render("pages/index", {
+        siteTitle: "FritzCMS",
+        siteDescription: "A CMS which fits your needs",
+      });
     });
 
     // start the express server
