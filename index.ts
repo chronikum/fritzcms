@@ -64,8 +64,9 @@ export default class FritzCMS {
 
     app.get("/", function (req, res) {
       res.render("pages/index", {
+        admin: req.isAuthenticated(),
         siteTitle: "FritzCMS",
-        siteDescription: "A CMS which fits your needs",
+        siteDescription: "A super simple cms",
       });
     });
 
@@ -80,14 +81,20 @@ export default class FritzCMS {
      * Authenticate user with post request
      */
     app.get("/dashboard", checkAuthentication, function (req, res) {
-      res.send("Welcome user");
+      res.render("pages/dashboardPage", {
+        admin: req.isAuthenticated(),
+        siteTitle: "FritzCMS",
+        siteDescription: "A CMS which fits your needs",
+      });
     });
 
     /**
      * Authenticate user with post request
      */
     app.get("/login", function (req, res) {
-      res.render("pages/loginPage");
+      res.render("pages/loginPage", {
+        admin: req.isAuthenticated(),
+      });
     });
 
     // start the express server
