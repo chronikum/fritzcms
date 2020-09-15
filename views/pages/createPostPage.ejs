@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ("../partials/head") %>
+    <%- include ("../scripts/postData") %>
+</head>
+
+<body class="container">
+    <%- include ("../partials/navigationBar") %>
+    <main>
+        <div class="jumbotron">
+            <h1>Create your post</h1>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-lg">Post title</span>
+                </div>
+                <input id="postTitle" type="text" name="title" />
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-lg">Post description</span>
+                </div>
+                <textarea id="postDesc" type="text" name="description" /></textarea>
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-lg">Post content</span>
+                </div>
+                <textarea id="postContent" type="text" name="content" /></textarea>
+            </div>
+            <button onclick="createPost()">Create Post</button>
+        </div>
+        <script>
+            function createPost() {
+                let title = document.getElementById("postTitle").value;
+                let desc = document.getElementById("postDesc").value;
+                let content = document.getElementById("postContent").value;
+                postData('doCreate', {
+                        title: title,
+                        description: desc,
+                        content: content
+                    })
+                    .then(data => {
+                        console.log(data)
+                        if (data) {
+                            if (data.success) {
+                                window.location.href = "dashboard";
+                            } else {
+                                alert("Something went wrong!")
+                                window.location.href = "dashboard";
+                            }
+                        } else {
+                            alert("Something went wrong!")
+                            window.location.href = "dashboard";
+                        }
+                    }).catch(e => {
+                        alert("Error! Server responded with invalid JSON!")
+                    });
+            }
+        </script>
+    </main>
+</body>
+
+</html>

@@ -1,6 +1,8 @@
+import { Post } from "./interfaces/Post";
 import { User } from "./interfaces/User";
 import UserModel from "./models/usermodel";
 import shajs from "sha.js";
+import PostModel from "./models/postmodel";
 
 export class DBClient {
   constructor() {}
@@ -36,5 +38,28 @@ export class DBClient {
       });
       return true;
     }
+  }
+
+  /**
+   * Creates new Post
+   *
+   * @param Post
+   * @returns true if successful
+   */
+  async createPost(post: Post): Promise<Boolean> {
+    return new Promise(function (resolve, reject) {
+      var postModel = new PostModel({
+        title: post.title,
+        description: post.description,
+        date: post.date,
+      });
+      postModel.save(function (err, message) {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
   }
 }

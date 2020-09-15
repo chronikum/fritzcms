@@ -1,3 +1,5 @@
+import { DBClient } from "./dbclient";
+import { Post } from "./interfaces/Post";
 import express from "express";
 import { Schema } from "mongoose";
 import mongoose from "mongoose";
@@ -14,6 +16,8 @@ var LocalStrategy = require("passport-local").Strategy;
 let path = "mongodb://localhost:27017/database";
 mongoose.connect(path, { useNewUrlParser: true });
 var db = mongoose.connection;
+
+let dbClient: DBClient = new DBClient();
 
 export default class FritzCMS {
   /**
@@ -78,13 +82,42 @@ export default class FritzCMS {
     });
 
     /**
-     * Authenticate user with post request
+     * Dashboard
      */
     app.get("/dashboard", checkAuthentication, function (req, res) {
       res.render("pages/dashboardPage", {
         admin: req.isAuthenticated(),
         siteTitle: "FritzCMS",
         siteDescription: "A CMS which fits your needs",
+      });
+    });
+
+    /**
+     * Create new post page
+     */
+    app.get("/create", checkAuthentication, function (req, res) {
+      res.render("pages/createPostPage", {
+        admin: req.isAuthenticated(),
+      });
+    });
+
+    /**
+     * Create new post page
+     */
+    app.post("/doCreate", checkAuthentication, async function (req, res) {
+      let title = (req as any).body.title;
+      let description = (req as any).body.description;
+      let content = (req as any).body.content;
+      let post: Post = {
+        title,
+        description,
+        content,
+        date: +Date.now(),
+      };
+
+      let success = await dbClient.createPost(post);
+      res.send({
+        success: success,
       });
     });
 

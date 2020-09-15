@@ -1,0 +1,9 @@
+<ul>
+    <% posts.forEach(function(post) { %>
+    <li><%- include('partials/post-previews', {
+        post-title: post.title,
+        post-description: post.description,
+        post-date: post.date
+    }); %></li>
+    <% }); %>
+</ul>
