@@ -1,3 +1,4 @@
+import { SiteSettings } from "./interfaces/SiteSettings";
 import { DBClient } from "./dbclient";
 import { Post } from "./interfaces/Post";
 import express from "express";
@@ -11,6 +12,7 @@ var bodyParser = require("body-parser");
 
 import shajs from "sha.js";
 import SystemlogModel from "./models/systemlogmodel";
+import SiteSettingsModel from "./models/sitesettingsmodel";
 
 var LocalStrategy = require("passport-local").Strategy;
 let path = "mongodb://localhost:27017/database";
@@ -40,6 +42,7 @@ export default class FritzCMS {
         if (err) return console.error(err);
       });
       this.createUsers();
+      this.createSiteSettings();
     } else {
       console.log("System was started already. Welcome back!");
       this.setupAuthentication();
@@ -66,11 +69,35 @@ export default class FritzCMS {
     app.use(passport.session());
     app.use(flash());
 
-    app.get("/", function (req, res) {
+    /**
+     * Index Site
+     */
+    app.get("/", async function (req, res) {
+      // Recent posts
+      let posts = await dbClient.getRecentPosts();
+      // Site Settings
+      var siteSettings = await dbClient.getSiteSettings();
+      console.log(siteSettings);
       res.render("pages/index", {
         admin: req.isAuthenticated(),
-        siteTitle: "FritzCMS",
-        siteDescription: "A super simple cms",
+        siteTitle: siteSettings.siteTitle,
+        siteDescription: siteSettings.siteDescription,
+        posts: posts,
+      });
+    });
+
+    /**
+     * Authenticate user with post request
+     */
+    app.get("/post", async function (req, res) {
+      let postID = (req.query.id as any) || -1;
+      let postbyID = (await dbClient.getPostbyPostID(postID)) || ({} as any);
+      console.log(postbyID);
+      res.render("pages/postDetailPage", {
+        admin: req.isAuthenticated(),
+        postTitle: postbyID.title || "Error 404",
+        postDescription: postbyID.description || "This post does not exist",
+        postContent: postbyID.content || "",
       });
     });
 
@@ -84,11 +111,14 @@ export default class FritzCMS {
     /**
      * Dashboard
      */
-    app.get("/dashboard", checkAuthentication, function (req, res) {
+    app.get("/dashboard", checkAuthentication, async function (req, res) {
+      let posts = await dbClient.getRecentPosts();
+
       res.render("pages/dashboardPage", {
         admin: req.isAuthenticated(),
         siteTitle: "FritzCMS",
         siteDescription: "A CMS which fits your needs",
+        posts: posts,
       });
     });
 
@@ -96,6 +126,35 @@ export default class FritzCMS {
      * Create new post page
      */
     app.get("/create", checkAuthentication, function (req, res) {
+      res.render("pages/createPostPage", {
+        admin: req.isAuthenticated(),
+      });
+    });
+
+    /**
+     * Get recent posts
+     */
+    app.post("/DogetRecentPosts", checkAuthentication, async function (
+      req,
+      res
+    ) {
+      let posts = await dbClient.getRecentPosts();
+      res.send(posts);
+    });
+
+    /**
+     * Set Site Settings
+     */
+    app.post("/getSiteSettings", async function (req, res) {
+      let siteSettings: SiteSettings = await dbClient.getSiteSettings();
+    });
+
+    /**
+     * Get recent posts
+     */
+    app.get("/getRecentPosts", checkAuthentication, async function (req, res) {
+      let posts = await dbClient.getRecentPosts();
+
       res.render("pages/createPostPage", {
         admin: req.isAuthenticated(),
       });
@@ -116,6 +175,7 @@ export default class FritzCMS {
       };
 
       let success = await dbClient.createPost(post);
+
       res.send({
         success: success,
       });
@@ -203,6 +263,23 @@ export default class FritzCMS {
     });
     admin.save(function (err, message) {
       console.log("Created admin");
+      if (err) return console.error(err);
+    });
+  }
+
+  /**
+   * SETUP
+   * Create site settings
+   */
+  createSiteSettings() {
+    var siteSettings = new SiteSettingsModel({
+      siteTitle: "Fritz CMS",
+      siteDescription: "Your site description",
+      siteSubTitle: "Your site subtitle",
+    });
+
+    siteSettings.save(function (err, message) {
+      console.log("Created site settings");
       if (err) return console.error(err);
     });
   }

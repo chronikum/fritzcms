@@ -9,6 +9,7 @@ var postSchema = new Schema({
   description: String,
   content: String,
   date: Date,
+  postID: Number,
 });
 
 var PostModel = mongoose.model("PostModel", postSchema);

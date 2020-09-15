@@ -12,8 +12,19 @@
             <h1><%= siteTitle %></h1>
             <p><%= siteDescription %></p>
         </div>
-        <button><a href="login">Go to login</a></button>
     </main>
+    <main>
+        <ul>
+            <% posts.forEach(function(post){ %>
+            <%- include('../partials/post-previews', {
+                postTitle: post.title,
+                postDescription: post.description,
+                postDate: post.date,
+            }); %>
+            <% }); %>
+        </ul>
+    </main>
+    <button><a href="login">Go to login</a></button>
 </body>
 
 </html>
