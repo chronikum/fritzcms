@@ -9,6 +9,7 @@ import UserModel from "./models/usermodel";
 var session = require("express-session");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
+var crypto = require("crypto");
 
 import shajs from "sha.js";
 import SystemlogModel from "./models/systemlogmodel";
@@ -310,7 +311,13 @@ export default class FritzCMS {
    * Create users
    */
   createUsers() {
-    var userpassword = "12345";
+    console.log("IMPORTANT! YOUR INITIAL ADMIN PASSWORD WILL APPEAR HERE!");
+    let initialAdminPassword = crypto.randomBytes(20).toString("hex");
+    var userpassword = initialAdminPassword;
+
+    console.log("Your initial admin password is:");
+    console.log(userpassword);
+
     var admin = new UserModel({
       username: "admin",
       userId: 2,

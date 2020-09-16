@@ -12,7 +12,9 @@ could change again.
 
 > **Don't ever use this in a production environment.**
 
-As it provide no nice, not-seen features except the initial admin password is 12345 it comes very handy if you want to build a fast unsecure system with just another cms solution which is hardly maintained.
+~~As it provide no nice, not-seen features except the initial admin password is 12345 it comes very handy if you want to build a fast unsecure system with just another cms solution which is hardly maintained.~~
+
+Hard to remember password are now generated when you start Fritz!CMS for the first time. It will appear in the Log. Which isn't secure. But, still - the password is randomly generated. It's not hashed or something secure like that, so if you forget it, just look in the database :)
 
 ## Setup
 
