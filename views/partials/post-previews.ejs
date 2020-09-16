@@ -5,6 +5,8 @@
     </div>
     <footer class="card-footer">
         <a href="post?id=<%= postID %>" class="card-footer-item">Read more</a>
-        <a href="post?id=<%= postID %>" class="card-footer-item">Read more</a>
+        <% if (admin) { %>
+        <a onclick="deletePost(<%= postID %>)" class="card-footer-item ">Delete</a>
+        <% } %>
     </footer>
 </div>

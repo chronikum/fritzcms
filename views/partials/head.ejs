@@ -3,4 +3,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fritz CMS</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" />
+    <!-- SCRIPTS -->
+    <%- include ("../scripts/postData") %>
+    <script>
+        /**
+         * Gets called to delete posts
+         * @param postID 
+         **/
+        function deletePost(postID) {
+            postData('doDeletePost', {
+                    postID: postID,
+                })
+                .then(data => {
+                    console.log(data)
+                    if (data) {
+                        if (data.success) {
+                            window.location.href = "dashboard";
+                        } else {
+                            alert("Something went wrong!")
+                            window.location.href = "dashboard";
+                        }
+                    } else {
+                        alert("Something went wrong!")
+                        window.location.href = "dashboard";
+                    }
+                }).catch(e => {
+                    alert("Error! Server responded with invalid JSON!")
+                });
+        }
+    </script>
 </head>

@@ -150,9 +150,23 @@ export default class FritzCMS {
     });
 
     /**
+     * Deletes post by ID
+     */
+    app.post("/doDeletePost", checkAuthentication, async function (req, res) {
+      let postID = (req as any).body.postID || -1;
+      let success = await dbClient.deletePost(postID);
+      res.send({
+        success: success,
+      });
+    });
+
+    /**
      * Set Site Settings
      */
-    app.get("/editSiteSettings", async function (req, res) {
+    app.get("/editSiteSettings", checkAuthentication, async function (
+      req,
+      res
+    ) {
       var siteSettings = await dbClient.getSiteSettings();
       res.render("pages/editSiteSettings", {
         admin: req.isAuthenticated(),
@@ -165,7 +179,10 @@ export default class FritzCMS {
     /**
      * Set Site Settings
      */
-    app.post("/doEeditSiteSettings", async function (req, res) {
+    app.post("/doEeditSiteSettings", checkAuthentication, async function (
+      req,
+      res
+    ) {
       let siteSettings: SiteSettings = {
         siteTitle: (req as any).body.siteTitle || "",
         siteDescription: (req as any).body.siteDescription || "",

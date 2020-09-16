@@ -111,6 +111,24 @@ export class DBClient {
   }
 
   /**
+   * Delete post by ID
+   * @param postID postID
+   */
+  async deletePost(postID: number): Promise<Boolean> {
+    return new Promise(function (resolve, reject) {
+      PostModel.findOneAndDelete({ postID: postID }, function (err, message) {
+        if (err) {
+          console.log("Error!");
+          resolve(false);
+        } else {
+          console.log("Success");
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  /**
    * Creates new Post
    *
    * @param Post
