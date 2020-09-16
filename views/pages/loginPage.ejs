@@ -5,28 +5,52 @@
     <%- include ("../partials/head") %>
 </head>
 
-<body class="container">
+<div class="section">
     <%- include ("../partials/navigationBar") %>
-    <main>
-        <div class="jumbotron">
-            <h1>Please login</h1>
-            <form action="/doLogin" method="GET">
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-lg">Username</span>
-                    </div>
-                    <input type="text" name="username" />
+    <div class="container">
+        <form>
+            <h1 class="title">Please login</h1>
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    <input class="input" id="username" type="text" name="username" />
                 </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-lg">Password</span>
-                    </div>
-                    <input type="password" name="password" />
+            </div>
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    <input class="input" id="password" type="password" name="password" />
                 </div>
-                <input type="submit" value="Login" />
-            </form>
-        </div>
-    </main>
-</body>
+            </div>
+            <div class="control">
+                <button onclick="login()" class="button is-link">Login</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function login() {
+            let password = document.getElementById("password").value;
+            let username = document.getElementById("username").value;
+            postData('doLogin', {
+                    username: username,
+                    password: password,
+                })
+                .then(data => {
+                    console.log(data)
+                    if (data) {
+                        if (data.success) {
+                            window.location.href = "dashboard";
+                        } else {
+                            alert("Password is not correct")
+                        }
+                    } else {
+                        alert("Password is not correct")
+                    }
+                }).catch(e => {
+                    alert("Password is not correct")
+                });
+        }
+    </script>
+</div>
 
 </html>

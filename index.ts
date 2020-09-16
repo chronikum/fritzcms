@@ -104,8 +104,10 @@ export default class FritzCMS {
     /**
      * Authenticate user with post request
      */
-    app.get("/doLogin", passport.authenticate("local"), function (req, res) {
-      res.redirect("dashboard");
+    app.post("/doLogin", passport.authenticate("local"), function (req, res) {
+      res.send({
+        success: true,
+      });
     });
 
     /**
