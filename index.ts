@@ -111,6 +111,14 @@ export default class FritzCMS {
     });
 
     /**
+     * Deauthenticate user with post request
+     */
+    app.get("/logout", checkAuthentication, function (req, res) {
+      req.logOut();
+      res.redirect("/");
+    });
+
+    /**
      * Dashboard
      */
     app.get("/dashboard", checkAuthentication, async function (req, res) {

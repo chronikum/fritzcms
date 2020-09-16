@@ -16,11 +16,20 @@
 
         <div class="navbar-end">
             <div class="navbar-item">
+                <% if (!admin) { %>
                 <div class="buttons">
                     <a href="/login" class="button is-light">
                         Log in
                     </a>
                 </div>
+                <% } %>
+                <% if (admin) { %>
+                <div class="buttons">
+                    <a href="/logout" class="button is-dark">
+                        Logout
+                    </a>
+                </div>
+                <% } %>
             </div>
         </div>
 
