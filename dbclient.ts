@@ -68,6 +68,34 @@ export class DBClient {
   }
 
   /**
+   * Saves site settings
+   * @param SiteSettings
+   * @returns true if successfull
+   */
+  async setSiteSettings(siteSettings: SiteSettings): Promise<Boolean> {
+    return new Promise(async function (resolve, reject) {
+      SiteSettingsModel.deleteMany({}, function (err) {
+        if (err) console.log(err);
+      });
+      let count = await SiteSettingsModel.count({});
+      console.log("Count of models: " + count);
+      var newSiteSettings = new SiteSettingsModel({
+        siteTitle: siteSettings.siteTitle,
+        siteDescription: siteSettings.siteDescription,
+        siteSubTitle: siteSettings.siteSubtitle,
+      });
+
+      newSiteSettings.save(function (err, message) {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  /**
    * Get a post by its postID
    * @returns Post
    */

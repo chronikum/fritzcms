@@ -1,7 +1,10 @@
-<div style="width: 100%;">
-    <a href='post?id=<%= postID %>'' style="color:black; border: 1px, black;">
-        <h3><%= postTitle %></h3>
-        <span><%= postDate %></span>
-        <p><%= postDescription %></p>
-    </a>
+<div class="card">
+    <div class="card-content">
+        <p class="title"><%= postTitle %></p>
+        <p class="subtitle"><%= postDescription %></p>
+    </div>
+    <footer class="card-footer">
+        <a href="post?id=<%= postID %>" class="card-footer-item">Read more</a>
+        <a href="post?id=<%= postID %>" class="card-footer-item">Read more</a>
+    </footer>
 </div>

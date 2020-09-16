@@ -1,24 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include ("../partials/head") %>
 
-<head>
-    <%- include ("../partials/head") %>
-</head>
 
-<body class="container">
+<div class="section">
     <%- include ("../partials/navigationBar") %>
-    <main>
+    <div class="section">
         <%- include ("../partials/dashboard-header") %>
-        <ul>
-            <% posts.forEach(function(post){ %>
-            <%- include('../partials/post-previews', {
+        <div class="section">
+            <span class="title-2">Your most recent posts:</span>
+            <ul>
+                <% posts.forEach(function(post){ %>
+                <%- include('../partials/post-previews', {
                 postTitle: post.title,
                 postDescription: post.description,
                 postDate: post.date,
+                postID: post.postID,
             }); %>
-            <% }); %>
-        </ul>
-    </main>
-</body>
-
-</html>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>

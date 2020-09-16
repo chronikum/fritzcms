@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <%- include ("../partials/head") %>
-</head>
-
-<body class="container">
+<%- include ("../partials/head") %>
+<div class="section">
     <%- include ("../partials/navigationBar") %>
-    <main>
-        <div class="jumbotron">
-            <h1><%= siteTitle %></h1>
-            <p><%= siteDescription %></p>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    <%= siteTitle %>
+                </h1>
+                <h2 class="subtitle">
+                    <%= siteDescription %>
+                </h2>
+            </div>
         </div>
-    </main>
-    <main>
-        <ul>
+    </section>
+    <div class="section">
+        <span class="title-2">Most recent posts:</span>
+        <div class="container">
             <% posts.forEach(function(post){ %>
             <%- include('../partials/post-previews', {
-                postTitle: post.title,
-                postDescription: post.description,
-                postDate: post.date,
-                postID: post.postID
-            }); %>
+                    postTitle: post.title,
+                    postDescription: post.description,
+                    postDate: post.date,
+                    postID: post.postID,
+                }); %>
             <% }); %>
-        </ul>
-    </main>
-    <button><a href="login">Go to login</a></button>
-</body>
-
-</html>
+        </div>
+    </div>
+</div>

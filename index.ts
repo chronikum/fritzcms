@@ -143,10 +143,39 @@ export default class FritzCMS {
     });
 
     /**
-     * Set Site Settings
+     * Get Site Settings
      */
     app.post("/getSiteSettings", async function (req, res) {
       let siteSettings: SiteSettings = await dbClient.getSiteSettings();
+    });
+
+    /**
+     * Set Site Settings
+     */
+    app.get("/editSiteSettings", async function (req, res) {
+      var siteSettings = await dbClient.getSiteSettings();
+      res.render("pages/editSiteSettings", {
+        admin: req.isAuthenticated(),
+        siteTitle: siteSettings.siteTitle,
+        siteDescription: siteSettings.siteDescription,
+        siteSubtitle: siteSettings.siteSubtitle,
+      });
+    });
+
+    /**
+     * Set Site Settings
+     */
+    app.post("/doEeditSiteSettings", async function (req, res) {
+      let siteSettings: SiteSettings = {
+        siteTitle: (req as any).body.siteTitle || "",
+        siteDescription: (req as any).body.siteDescription || "",
+        siteSubtitle: (req as any).body.siteSubtitle || "",
+      };
+
+      let success = await dbClient.setSiteSettings(siteSettings);
+      res.send({
+        success: success,
+      });
     });
 
     /**

@@ -3,39 +3,40 @@
 <div class="section">
     <%- include ("../partials/navigationBar") %>
     <form>
-        <h1 class="title">Create your post</h1>
+        <h1 class="title">Edit your site settings</h1>
         <div class="field">
-            <label class="label">Post Title</label>
+            <label class="label">Site Title</label>
             <div class="control">
-                <input class="input" id="postTitle" type="text" name="title" />
+                <input class="input" id="siteTitle" type="text" name="siteTitle" value="<%= siteTitle %>" />
             </div>
         </div>
         <div class="field">
-            <label class="label">Post Description</label>
+            <label class="label">Site Description</label>
             <div class="control">
-                <input class="input" id="postDesc" type="text" name="title" />
+                <input class="input" id="siteDescription" type="text" name="siteDescription"
+                    value="<%= siteDescription %>" />
             </div>
         </div>
         <div class="field">
-            <label class="label">Message</label>
+            <label class="label">Site Subtitle</label>
             <div class="control">
-                <textarea id="postContent" class="textarea" placeholder="Textarea"></textarea>
+                <input class="input" id="siteSubtitle" type="text" name="siteSubtitle" value="<%= siteSubtitle %>" />
             </div>
         </div>
         <div class="control">
-            <button onclick="createPost()" class="button is-link">Submit</button>
+            <button onclick="createPost()" class="button is-link">Save</button>
         </div>
     </form>
 </div>
 <script>
     function createPost() {
-        let title = document.getElementById("postTitle").value;
-        let desc = document.getElementById("postDesc").value;
-        let content = document.getElementById("postContent").value;
-        postData('doCreate', {
-                title: title,
-                description: desc,
-                content: content
+        let siteTitle = document.getElementById("siteTitle").value;
+        let siteDescription = document.getElementById("siteDescription").value;
+        let siteSubtitle = document.getElementById("siteSubtitle").value;
+        postData('doEeditSiteSettings', {
+                siteTitle: siteTitle,
+                siteDescription: siteDescription,
+                siteSubtitle: siteSubtitle
             })
             .then(data => {
                 console.log(data)
