@@ -10,6 +10,7 @@ var session = require("express-session");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
 var crypto = require("crypto");
+var cors = require("cors");
 
 import shajs from "sha.js";
 import SystemlogModel from "./models/systemlogmodel";
@@ -55,6 +56,7 @@ export default class FritzCMS {
     const port = 80; // default port to listen
 
     app.set("view engine", "ejs");
+    app.use(cors({ credentials: true, origin: "http://localhost" }));
 
     app.use(express.json({ type: "*/*" }));
     app.use(
@@ -278,7 +280,8 @@ export default class FritzCMS {
             console.log("User not found!");
             return done(null, false, { message: "Incorrect username." });
           }
-          if (user.password !== password) {
+          const hashedPW = crypto.createHmac("sha256", password).digest("hex");
+          if (user.password !== hashedPW) {
             console.log("Password incorrect");
             return done(null, false, { message: "Incorrect password." });
           }
@@ -311,23 +314,14 @@ export default class FritzCMS {
    * Create users
    */
   createUsers() {
-    console.log("IMPORTANT! YOUR INITIAL ADMIN PASSWORD WILL APPEAR HERE!");
+    console.log(
+      "IMPORTANT! YOUR RANDOM INITIAL GENERATED ADMIN PASSWORD WILL APPEAR HERE!"
+    );
     let initialAdminPassword = crypto.randomBytes(20).toString("hex");
     var userpassword = initialAdminPassword;
-
     console.log("Your initial admin password is:");
     console.log(userpassword);
-
-    var admin = new UserModel({
-      username: "admin",
-      userId: 2,
-      password: userpassword,
-      isAdmin: true,
-    });
-    admin.save(function (err, message) {
-      console.log("Created admin");
-      if (err) return console.error(err);
-    });
+    dbClient.registerUser("admin", userpassword, true);
   }
 
   /**

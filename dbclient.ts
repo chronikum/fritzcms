@@ -5,6 +5,7 @@ import UserModel from "./models/usermodel";
 import shajs from "sha.js";
 import PostModel from "./models/postmodel";
 import SiteSettingsModel from "./models/sitesettingsmodel";
+const crypto = require("crypto");
 
 export class DBClient {
   constructor() {}
@@ -15,21 +16,34 @@ export class DBClient {
    * @param password password which should be set for the new user
    * @returns True, if success
    */
-  async registerUser(username: string, password: string): Promise<Boolean> {
-    var highestUsers = (await UserModel.find()
-      .sort({ userId: -1 })
-      .limit(1)) as User[];
+  async registerUser(
+    username: string,
+    password: string,
+    isAdmin: boolean
+  ): Promise<Boolean> {
+    let userCount = await UserModel.countDocuments({});
 
-    var toIncrement: number = highestUsers[0].userId as number;
-    toIncrement++;
+    // Oh shit this is really crappy and not easy to read.
+    // What it is doing: highestUser just returns the highest number of the user in the user collection.
+    // If there is not any user, we will just set highestUser to zero
+    var highestUser: number =
+      userCount === 0
+        ? 0
+        : ((((await UserModel.find()
+            .sort({ userId: -1 })
+            .limit(1)) as User[])[0].userId || 0) as number);
+
+    const hash = crypto.createHmac("sha256", password).digest("hex");
+    console.log("Hashed Password:");
+    console.log(hash);
     var newUser = new UserModel({
       username: username,
-      userId: toIncrement,
-      password: password,
-      isAdmin: false,
+      userId: highestUser + 1,
+      password: hash,
+      isAdmin: isAdmin,
     });
     // Create user only if user doesn't exist already
-    var existingUser = await UserModel.findOne({ username: username });
+    var existingUser = await UserModel.findOne({ userId: highestUser });
     if (existingUser) {
       console.log("User does already exist!");
       return false;
