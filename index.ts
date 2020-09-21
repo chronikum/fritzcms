@@ -225,7 +225,8 @@ export default class FritzCMS {
     app.post("/doCreate", checkAuthentication, async function (req, res) {
       let title = (req as any).body.title;
       let description = (req as any).body.description;
-      let content = (req as any).body.content;
+      let content = JSON.stringify((req as any).body.content);
+
       let post: Post = {
         title,
         description,

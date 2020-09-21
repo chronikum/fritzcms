@@ -160,6 +160,7 @@ export class DBClient {
       });
       postModel.save(function (err, message) {
         if (err) {
+          console.log(err);
           resolve(false);
         } else {
           resolve(true);
