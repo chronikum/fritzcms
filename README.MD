@@ -14,7 +14,7 @@ could change again.
 
 ~~As it provide no nice, not-seen features except the initial admin password is 12345 it comes very handy if you want to build a fast unsecure system with just another cms solution which is hardly maintained.~~
 
-Hard to remember password are now generated when you start Fritz!CMS for the first time. It will appear in the Log. Which isn't secure. But, still - the password is randomly generated. It's not hashed or something secure like that, so if you forget it, just look in the database :)
+Hard to remember password are now generated when you start Fritz!CMS for the first time. It will appear in the Log. Which isn't secure. But, still - the password is randomly generated. It's hashed, so if you forget them you may have a problem.
 
 ## Setup
 
@@ -23,6 +23,8 @@ I haven't thought about optimization yet and i am not sure if it will run if you
 By the way: Because I made some really clever startup scripts you have to create the `dist/` folder yourself and when it is not existing, it won't start.
 
 I am pretty sure you could run a nginx reverse proxy to provide https, but then you should change the port which is currently `80`.
+
+Also, please do not expose your mongodb to the public, everyone can read the stuff then which would be stupid.
 
 > **Don't ever use this in a production environment.**
 
